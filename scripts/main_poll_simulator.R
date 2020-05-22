@@ -8,7 +8,7 @@ library(caret)
 library(glmnet)
 library(kknn)
 
-num_sims <- 10000
+num_sims <- 20000
 
 # wrangle data ------------------------------------------------------------
 message("Wrangling data...")
@@ -284,9 +284,9 @@ final %>%
 # toy simulations ---------------------------------------------------------
 message("Simulating the election...")
 # errors
-national_error <- (0.0167*2)*1.5
-regional_error <- (0.0167*2)*1.5
-state_error <- (0.0152*2)*1.5
+national_error <- (0.04)
+regional_error <- (0.04)
+state_error <- (0.04)
 
 # sims
 national_errors <- rnorm(num_sims, 0, national_error)
@@ -326,9 +326,8 @@ state_and_national_errors %>%
   summarise(sd = sd(sim_biden_margin)) %>% 
   pull(sd) %>% mean
 
-# tipping point state, maps -----------------------------------------------
-# calc the avg tipping point
-tipping_point <- state_and_national_errors %>%
+# add electoral votes and pop vote to the simulations
+sims <-state_and_national_errors %>%
   do.call('bind_rows',.) %>%
   group_by(state) %>%
   mutate(draw = row_number()) %>%
@@ -338,11 +337,141 @@ tipping_point <- state_and_national_errors %>%
   group_by(draw) %>%
   mutate(dem_nat_pop_margin = weighted.mean(sim_biden_margin,weight))
 
+# extract state-level data
+state_probs <- sims %>%
+  group_by(state_abbv = state) %>%
+  summarise(mean_biden_margin = mean(sim_biden_margin,na.rm=T),
+            se_biden_margin = sd(sim_biden_margin,na.rm=T),
+            ev = unique(ev),
+            prob = mean(sim_biden_margin > 0,na.rm=T)) %>%
+  ungroup() %>%
+  arrange(desc(mean_biden_margin)) %>% 
+  mutate(cumulative_ev = cumsum(ev)) 
 
-tipping_point <- pblapply(1:max(tipping_point$draw),
+# graph mean estimates by state
+margin_map.gg <- urbnmapr::states %>%
+  left_join(state_probs) %>%
+  filter(state_abbv != 'DC') %>%
+  ggplot(aes(x=long,y=lat,group=group,
+             fill = mean_biden_margin*100)) +
+  geom_polygon(col='gray40')  + 
+  coord_map("albers",lat0=39, lat1=45) +
+  scale_fill_gradient2(name='Biden vote margin',high='#3498DB',low='#E74C3C',mid='gray98',midpoint=0,
+                       guide = 'legend') +
+  guides('fill'=guide_legend(nrow=1,title.position = 'top',title.hjust = 0.5)) +
+  theme_void() + 
+  theme(legend.position = 'top')
+
+margin_map.gg
+
+# table form  -- close states
+sumary_table.close <- state_probs %>%
+  arrange(abs(mean_biden_margin)) %>% 
+  head(20) %>%
+  mutate(upper = round((mean_biden_margin + se_biden_margin*1.96)*100),
+         lower = round((mean_biden_margin - se_biden_margin*1.96)*100),
+         mean_biden_margin = round(mean_biden_margin*100)) %>%
+  arrange(desc(mean_biden_margin)) %>% 
+  mutate(txt = sprintf('%s [%s, %s]',mean_biden_margin,lower,upper)) %>%
+  dplyr::select(state_abbv,txt) 
+
+margin.kable.close <- left_join(sumary_table.close %>%
+                            head(ceiling(nrow(.)/2)) %>%
+                            mutate(row_number = row_number()),
+                            sumary_table.close %>%
+                            tail(floor(nrow(.)-(nrow(.)/2))) %>%
+                            mutate(row_number = row_number()),
+                          by='row_number') %>% 
+  select(-row_number)
+
+margin.kable.close[is.na(margin.kable.close)] <- ' '
+
+margin.kable.close <- margin.kable.close %>%
+  setNames(.,c('State','Biden margin, uncertainty interval, (%)','State','Biden margin, ... (%)')) %>%
+  knitr::kable(.)
+
+# table form  -- not  states
+sumary_table.not_close <- state_probs %>%
+  arrange(abs(mean_biden_margin)) %>% 
+  tail(31) %>%
+  mutate(upper = round((mean_biden_margin + se_biden_margin*1.96)*100),
+         lower = round((mean_biden_margin - se_biden_margin*1.96)*100),
+         mean_biden_margin = round(mean_biden_margin*100)) %>%
+  arrange(desc(mean_biden_margin)) %>% 
+  mutate(txt = sprintf('%s [%s, %s]',mean_biden_margin,lower,upper)) %>%
+  dplyr::select(state_abbv,txt) 
+
+margin.kable.not_close <- left_join(sumary_table.not_close %>%
+                                  head(ceiling(nrow(.)/2)) %>%
+                                  mutate(row_number = row_number()),
+                                sumary_table.not_close %>%
+                                  tail(floor(nrow(.)-(nrow(.)/2))) %>%
+                                  mutate(row_number = row_number()),
+                                by='row_number') %>% 
+  select(-row_number)
+
+margin.kable.not_close[is.na(margin.kable.not_close)] <- ' '
+
+margin.kable.not_close <- margin.kable.not_close %>%
+  setNames(.,c('State','Biden margin, margin of error, (%)','State','Biden margin, MOE (%)')) %>%
+  knitr::kable(.)
+
+
+# graph win probabilities
+win_probs_map <- urbnmapr::states %>%
+  left_join(state_probs) %>%
+  ggplot(aes(x=long,y=lat,group=group,fill=prob*100)) +
+  geom_polygon(col='gray40')  + 
+  coord_map("albers",lat0=39, lat1=45) +
+  scale_fill_gradient2(name='Democratic win probability',high='#3498DB',low='#E74C3C',mid='gray98',midpoint=50,
+                       limits = c(0,100)) +
+  theme_void() + 
+  theme(legend.position = 'top')
+
+# electoral vote histogram
+ev.histogram <- sims %>%
+  group_by(draw) %>%
+  summarise(dem_ev = sum(ev * (sim_biden_margin > 0))) %>%
+  ggplot(.,aes(x=dem_ev,fill=dem_ev >= 270)) +
+  geom_histogram(binwidth=1) + 
+  scale_fill_manual(values=c('TRUE'='blue','FALSE'='red')) +
+  scale_y_continuous(labels = function(x){paste0(round(x / max(sims$draw)*100,2),'%')},
+                     expand = expansion(mult = c(0, 0.2))) +
+  labs(x='Democratic electoral votes',y='Probability') +
+  theme_minimal() + 
+  theme(legend.position = 'none') +
+  labs(subtitle = sprintf('p(Biden win) = %s',
+                          sims %>%
+                            group_by(draw) %>%
+                            summarise(dem_ev = sum(ev * (sim_biden_margin > 0))) %>%
+                            ungroup() %>%
+                            summarise(dem_ev_majority = round(mean(dem_ev >=270),2)) %>%
+                            pull(dem_ev_majority)))
+
+# scenarios
+scenarios.kable <- sims %>%
+  group_by(draw) %>%
+  summarise(dem_ev = sum(ev * (sim_biden_margin > 0)),
+            dem_nat_pop_margin = unique(dem_nat_pop_margin)) %>%
+  mutate(scenario = 
+           case_when(dem_ev >= 270 & dem_nat_pop_margin > 0 ~ 'Democrats win the popular vote and electoral college',
+                     dem_ev >= 270 & dem_nat_pop_margin < 0 ~ 'Republicans win the popular vote, but Democrats win the electoral college',
+                     dem_ev <  270 & dem_nat_pop_margin > 0 ~ 'Democrats win the popular vote, but Republicans win the electoral college',
+                     dem_ev <  270 & dem_nat_pop_margin < 0 ~ 'Republicans win the popular vote and electoral college',
+           )) %>%
+  group_by(scenario) %>%
+  summarise(chance = n()) %>%
+  mutate(chance = round(chance / sum(chance)*100)) %>%
+  setNames(.,c('','Chance (%)')) %>%
+  knitr::kable()
+
+
+# tipping point state, maps -----------------------------------------------
+# calc the avg tipping point
+tipping_point <- pblapply(1:max(sims$draw),
                           cl = parallel::detectCores() - 1,
                           function(x){
-                            temp <- tipping_point[tipping_point$draw==x,]
+                            temp <- sims[sims$draw==x,]
                             
                             if(temp$dem_nat_pop_margin > 0){
                               temp <- temp %>% arrange(desc(sim_biden_margin))
@@ -410,76 +539,7 @@ ev.popvote.divide <- tipping_point %>%
   mutate(diff =  sim_biden_margin - dem_nat_pop_margin) %>%
   pull(diff) %>% mean # hist(breaks=100)
 
-# extract state-level data
-state_probs <- tipping_point %>%
-  group_by(state_abbv = state) %>%
-  summarise(mean_biden_margin = mean(sim_biden_margin,na.rm=T),
-            ev = unique(ev),
-            prob = mean(sim_biden_margin > 0,na.rm=T)) %>%
-  ungroup() %>%
-  arrange(desc(mean_biden_margin)) %>% 
-  mutate(cumulative_ev = cumsum(ev)) 
 
-# graph mean estimates by state
-margin_map.gg <- urbnmapr::states %>%
-  left_join(state_probs) %>%
-  filter(state_abbv != 'DC') %>%
-  ggplot(aes(x=long,y=lat,group=group,
-             fill = mean_biden_margin*100)) +
-  geom_polygon(col='gray40')  + 
-  coord_map("albers",lat0=39, lat1=45) +
-  scale_fill_gradient2(name='Biden vote margin',high='#3498DB',low='#E74C3C',mid='gray98',midpoint=0,
-                       guide = 'legend') +
-  guides('fill'=guide_legend(nrow=1,title.position = 'top',title.hjust = 0.5)) +
-  theme_void() + 
-  theme(legend.position = 'top')
-
-margin_map.gg
-
-# graph win probabilities
-urbnmapr::states %>%
-  left_join(state_probs) %>%
-  ggplot(aes(x=long,y=lat,group=group,fill=prob*100)) +
-  geom_polygon(col='gray40')  + 
-  coord_map("albers",lat0=39, lat1=45) +
-  scale_fill_gradient2(name='Democratic win probability',high='#3498DB',low='#E74C3C',mid='gray98',midpoint=50,
-                       limits = c(0,100)) +
-  theme_void() + 
-  theme(legend.position = 'top')
-
-# electoral vote histogram
-tipping_point %>%
-  group_by(draw) %>%
-  summarise(dem_ev = sum(ev * (sim_biden_margin > 0))) %>%
-  ggplot(.,aes(x=dem_ev,fill=dem_ev >= 270)) +
-  geom_histogram(binwidth=1) + 
-  scale_fill_manual(values=c('TRUE'='blue','FALSE'='red')) +
-  scale_y_continuous(labels = function(x){paste0(round(x / max(tipping_point$draw)*100,2),'%')}) +
-  labs(x='Democratic electoral votes',y='Probability') +
-  theme_minimal() + 
-  theme(legend.position = 'none') +
-  labs(subtitle = sprintf('p(Democratic win) = %s',
-                          tipping_point %>%
-                            group_by(draw) %>%
-                            summarise(dem_ev = sum(ev * (sim_biden_margin > 0))) %>%
-                            ungroup() %>%
-                            summarise(dem_ev_majority = round(mean(dem_ev >=270),2)) %>%
-                            pull(dem_ev_majority)))
-
-# scenarios
-tipping_point %>%
-  group_by(draw) %>%
-  summarise(dem_ev = sum(ev * (sim_biden_margin > 0)),
-            dem_nat_pop_margin = unique(dem_nat_pop_margin)) %>%
-  mutate(scenario = 
-           case_when(dem_ev >= 270 & dem_nat_pop_margin > 0 ~ 'D EC D vote',
-                     dem_ev >= 270 & dem_nat_pop_margin < 0 ~ 'D EC R vote',
-                     dem_ev <  270 & dem_nat_pop_margin > 0 ~ 'R EC D vote',
-                     dem_ev <  270 & dem_nat_pop_margin < 0 ~ 'R EC R vote',
-           )) %>%
-  group_by(scenario) %>%
-  summarise(prop = n()) %>%
-  mutate(prop = prop / sum(prop))
 
 
 # ec - popular vote gap ---------------------------------------------------
