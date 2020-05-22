@@ -387,7 +387,7 @@ margin.kable.close <- left_join(sumary_table.close %>%
 margin.kable.close[is.na(margin.kable.close)] <- ' '
 
 margin.kable.close <- margin.kable.close %>%
-  setNames(.,c('State','Biden margin, uncertainty interval, (%)','State','Biden margin, ... (%)')) %>%
+  setNames(.,c('State','Biden margin, uncertainty interval (%)','State','Biden margin, ... (%)')) %>%
   knitr::kable(.)
 
 # table form  -- not  states
@@ -413,7 +413,7 @@ margin.kable.not_close <- left_join(sumary_table.not_close %>%
 margin.kable.not_close[is.na(margin.kable.not_close)] <- ' '
 
 margin.kable.not_close <- margin.kable.not_close %>%
-  setNames(.,c('State','Biden margin, margin of error, (%)','State','Biden margin, MOE (%)')) %>%
+  setNames(.,c('State','Biden margin, uncertainty interval (%)','State','Biden margin, ... (%)')) %>%
   knitr::kable(.)
 
 
