@@ -127,7 +127,7 @@ On average, the tipping point state is **<span style="color: #3498DB;">`r abs(ro
 
 I hope you learned something. You can find me on Twitter at [\@gelliottmorris](https://www.twitter.com/gelliottmorris) or my personal website at [gelliottmorris.com](https://www.gelliottmorris.com/).
 
-This content is licensed with the [MIT license](LICENSE.md).
+This content is licensed with the [MIT license](LICENSE).
 
 
 

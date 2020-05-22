@@ -115,7 +115,7 @@ proceed…
 
 These graphs are updated hourly with new polls.
 
-Last updated on **May 22, 2020 at 11:50 AM EDT.**
+Last updated on **May 22, 2020 at 11:54 AM EDT.**
 
 ### National polling average
 
@@ -145,7 +145,7 @@ states:**
 | MI    | 6 \[-8, 19\]                           | TX    | \-2 \[-16, 12\]     |
 | NV    | 6 \[-8, 19\]                           | AK    | \-6 \[-20, 7\]      |
 | WI    | 5 \[-9, 18\]                           | SC    | \-7 \[-21, 6\]      |
-| AZ    | 5 \[-8, 19\]                           | MT    | \-9 \[-22, 5\]      |
+| AZ    | 5 \[-8, 19\]                           | MT    | \-8 \[-22, 5\]      |
 | PA    | 4 \[-9, 18\]                           | MO    | \-10 \[-23, 4\]     |
 | FL    | 3 \[-10, 17\]                          | UT    | \-10 \[-24, 3\]     |
 | NC    | 1 \[-13, 15\]                          | KS    | \-11 \[-24, 3\]     |
@@ -156,20 +156,20 @@ states:**
 | State | Biden margin, uncertainty interval (%) | State | Biden margin, … (%) |
 | :---- | :------------------------------------- | :---- | :------------------ |
 | DC    | 80 \[66, 93\]                          | VA    | 11 \[-3, 25\]       |
-| HI    | 33 \[19, 46\]                          | MS    | \-12 \[-25, 2\]     |
-| CA    | 33 \[19, 46\]                          | IN    | \-12 \[-25, 2\]     |
-| MA    | 30 \[17, 44\]                          | LA    | \-13 \[-26, 1\]     |
+| HI    | 33 \[19, 46\]                          | IN    | \-12 \[-25, 2\]     |
+| CA    | 33 \[19, 46\]                          | MS    | \-12 \[-25, 2\]     |
+| MA    | 31 \[17, 44\]                          | LA    | \-13 \[-26, 1\]     |
 | VT    | 29 \[15, 43\]                          | NE    | \-14 \[-28, -1\]    |
-| MD    | 28 \[14, 42\]                          | TN    | \-17 \[-30, -3\]    |
-| NY    | 27 \[13, 41\]                          | AR    | \-18 \[-31, -5\]    |
-| WA    | 20 \[6, 34\]                           | KY    | \-18 \[-32, -5\]    |
+| MD    | 28 \[15, 42\]                          | TN    | \-17 \[-30, -3\]    |
+| NY    | 27 \[13, 41\]                          | AR    | \-18 \[-32, -4\]    |
+| WA    | 20 \[6, 33\]                           | KY    | \-18 \[-32, -5\]    |
 | IL    | 20 \[7, 34\]                           | SD    | \-19 \[-32, -5\]    |
 | RI    | 19 \[6, 33\]                           | AL    | \-19 \[-32, -5\]    |
 | NJ    | 19 \[6, 33\]                           | ID    | \-20 \[-34, -7\]    |
 | CT    | 18 \[5, 32\]                           | ND    | \-23 \[-37, -10\]   |
-| OR    | 16 \[2, 30\]                           | OK    | \-25 \[-38, -11\]   |
-| CO    | 15 \[1, 28\]                           | WV    | \-30 \[-44, -16\]   |
-| DE    | 15 \[1, 29\]                           | WY    | \-32 \[-45, -18\]   |
+| OR    | 16 \[2, 29\]                           | OK    | \-25 \[-38, -11\]   |
+| DE    | 15 \[1, 28\]                           | WV    | \-30 \[-44, -16\]   |
+| CO    | 15 \[1, 29\]                           | WY    | \-32 \[-45, -18\]   |
 | NM    | 12 \[-1, 26\]                          |       |                     |
 
 ### State win probabilities
@@ -188,24 +188,24 @@ how often that happens:
 
 | State | Tipping point chance (%) | State | Tipping point chance (%) |
 | :---- | -----------------------: | :---- | -----------------------: |
-| FL    |                     18.2 | CT    |                      0.4 |
-| PA    |                     10.8 | NJ    |                      0.4 |
-| MI    |                      9.2 | DE    |                      0.3 |
-| TX    |                      8.9 | IL    |                      0.3 |
-| NC    |                      6.5 | WA    |                      0.3 |
-| AZ    |                      6.1 | AK    |                      0.2 |
-| WI    |                      5.8 | MO    |                      0.2 |
-| GA    |                      5.3 | SC    |                      0.2 |
-| MN    |                      5.0 | IN    |                      0.1 |
-| OH    |                      4.6 | KS    |                      0.1 |
-| VA    |                      4.6 | LA    |                      0.1 |
-| NV    |                      3.4 | MT    |                      0.1 |
-| NH    |                      2.1 | RI    |                      0.1 |
-| ME    |                      1.7 | UT    |                      0.1 |
+| FL    |                     17.9 | CT    |                      0.4 |
+| PA    |                     10.8 | DE    |                      0.4 |
+| MI    |                      9.2 | NJ    |                      0.4 |
+| TX    |                      8.5 | WA    |                      0.4 |
+| AZ    |                      6.6 | AK    |                      0.3 |
+| NC    |                      6.3 | IL    |                      0.3 |
+| WI    |                      6.1 | SC    |                      0.3 |
+| GA    |                      5.3 | MO    |                      0.2 |
+| MN    |                      4.7 | IN    |                      0.1 |
+| OH    |                      4.7 | KS    |                      0.1 |
+| VA    |                      4.6 | MS    |                      0.1 |
+| NV    |                      3.3 | MT    |                      0.1 |
+| NH    |                      2.0 | RI    |                      0.1 |
+| ME    |                      1.8 | UT    |                      0.1 |
 | IA    |                      1.6 | KY    |                      0.0 |
-| NM    |                      1.4 | MS    |                      0.0 |
+| NM    |                      1.3 | LA    |                      0.0 |
 | CO    |                      1.2 | NE    |                      0.0 |
-| OR    |                      0.7 | NY    |                      0.0 |
+| OR    |                      0.8 | NY    |                      0.0 |
 
 ### Electoral college outcomes
 
@@ -222,8 +222,8 @@ majority:
 
 |                                                                           | Chance (%) |
 | ------------------------------------------------------------------------- | ---------: |
-| Democrats win the popular vote and electoral college                      |         86 |
-| Democrats win the popular vote, but Republicans win the electoral college |         11 |
+| Democrats win the popular vote and electoral college                      |         87 |
+| Democrats win the popular vote, but Republicans win the electoral college |         10 |
 | Republicans win the popular vote and electoral college                    |          3 |
 | Republicans win the popular vote, but Democrats win the electoral college |          0 |
 
@@ -242,4 +242,4 @@ I hope you learned something. You can find me on Twitter at
 [@gelliottmorris](https://www.twitter.com/gelliottmorris) or my personal
 website at [gelliottmorris.com](https://www.gelliottmorris.com/).
 
-This content is licensed with the [MIT license](LICENSE.md).
+This content is licensed with the [MIT license](LICENSE).
