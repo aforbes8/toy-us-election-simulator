@@ -84,15 +84,15 @@ of.
 
 **A note on forecasting:** The reason this is a “toy” model is because
 it does not attempt to project movement in the polls between whatever
-day it runs and election day. Instead, it treats the polls as highly
-uncertain. But this is an empirically flawed assumption. We know from
-history that polls during and after conventions tend to over-state the
-party that most recently nominated a candidate. A true *forecasting*
-model will adjust for these historical patterns and project that the
-favored candidate’s election-day polling margin will be smaller than it
-is on the model run date. This is yet another reason you should treat
-this analysis with a hefty dose of skepticism—at least until election
-day…
+day it runs and election day. Instead, it just treats the polls as
+uncertain readings of the future, assuming no change in means. But this
+is an empirically flawed assumption. We know from history that polls
+during and after conventions tend to over-state the party that most
+recently nominated a candidate. A true *forecasting* model will adjust
+for these historical patterns and project that the favored candidate’s
+election-day polling margin will be smaller than it is on the model run
+date. This is yet another reason you should treat this analysis with a
+hefty dose of skepticism—at least until election day…
 
 **A note on polls:** The purpose of this analysis is to determine what
 we know *now* from the polls. But polls often err in predicting
@@ -107,7 +107,7 @@ work, and to provide some forecasters with code to improve their
 methods.
 
 With all that out of the way, I guess we can
-procede:
+proceed…
 
 ## Automated report:
 
@@ -115,12 +115,12 @@ procede:
 
 These graphs are updated hourly with new polls.
 
-Last updated on **May 22, 2020 at 12:06 AM EDT.**
+Last updated on **May 22, 2020 at 11:50 AM EDT.**
 
 ### National polling average
 
 Joe Biden’s margin in national polls is
-**<span style="color: #3498DB;">6.3</span>** percentage points. His
+**<span style="color: #3498DB;">6.1</span>** percentage points. His
 margin implied by state-level polls and the demographic regression is
 **<span style="color: #3498DB;">7.8</span>** percentage points.
 
@@ -142,7 +142,7 @@ states:**
 | ME    | 9 \[-5, 23\]                           | GA    | 0 \[-14, 13\]       |
 | NH    | 8 \[-6, 22\]                           | OH    | \-2 \[-15, 12\]     |
 | MN    | 8 \[-5, 22\]                           | IA    | \-2 \[-16, 12\]     |
-| MI    | 6 \[-8, 19\]                           | TX    | \-2 \[-16, 11\]     |
+| MI    | 6 \[-8, 19\]                           | TX    | \-2 \[-16, 12\]     |
 | NV    | 6 \[-8, 19\]                           | AK    | \-6 \[-20, 7\]      |
 | WI    | 5 \[-9, 18\]                           | SC    | \-7 \[-21, 6\]      |
 | AZ    | 5 \[-8, 19\]                           | MT    | \-9 \[-22, 5\]      |
@@ -158,18 +158,18 @@ states:**
 | DC    | 80 \[66, 93\]                          | VA    | 11 \[-3, 25\]       |
 | HI    | 33 \[19, 46\]                          | MS    | \-12 \[-25, 2\]     |
 | CA    | 33 \[19, 46\]                          | IN    | \-12 \[-25, 2\]     |
-| MA    | 31 \[17, 44\]                          | LA    | \-13 \[-26, 1\]     |
-| VT    | 29 \[15, 43\]                          | NE    | \-15 \[-28, -1\]    |
+| MA    | 30 \[17, 44\]                          | LA    | \-13 \[-26, 1\]     |
+| VT    | 29 \[15, 43\]                          | NE    | \-14 \[-28, -1\]    |
 | MD    | 28 \[14, 42\]                          | TN    | \-17 \[-30, -3\]    |
-| NY    | 27 \[13, 40\]                          | AR    | \-18 \[-32, -4\]    |
-| WA    | 20 \[6, 33\]                           | KY    | \-18 \[-32, -5\]    |
+| NY    | 27 \[13, 41\]                          | AR    | \-18 \[-31, -5\]    |
+| WA    | 20 \[6, 34\]                           | KY    | \-18 \[-32, -5\]    |
 | IL    | 20 \[7, 34\]                           | SD    | \-19 \[-32, -5\]    |
 | RI    | 19 \[6, 33\]                           | AL    | \-19 \[-32, -5\]    |
 | NJ    | 19 \[6, 33\]                           | ID    | \-20 \[-34, -7\]    |
 | CT    | 18 \[5, 32\]                           | ND    | \-23 \[-37, -10\]   |
-| OR    | 16 \[2, 29\]                           | OK    | \-25 \[-39, -11\]   |
+| OR    | 16 \[2, 30\]                           | OK    | \-25 \[-38, -11\]   |
 | CO    | 15 \[1, 28\]                           | WV    | \-30 \[-44, -16\]   |
-| DE    | 15 \[1, 28\]                           | WY    | \-32 \[-45, -18\]   |
+| DE    | 15 \[1, 29\]                           | WY    | \-32 \[-45, -18\]   |
 | NM    | 12 \[-1, 26\]                          |       |                     |
 
 ### State win probabilities
@@ -188,25 +188,24 @@ how often that happens:
 
 | State | Tipping point chance (%) | State | Tipping point chance (%) |
 | :---- | -----------------------: | :---- | -----------------------: |
-| FL    |                     18.4 | IL    |                      0.4 |
-| PA    |                     10.7 | NJ    |                      0.4 |
-| MI    |                      9.4 | AK    |                      0.3 |
-| TX    |                      8.5 | CT    |                      0.3 |
-| NC    |                      6.7 | MO    |                      0.2 |
-| AZ    |                      6.2 | SC    |                      0.2 |
-| WI    |                      6.2 | WA    |                      0.2 |
-| GA    |                      5.2 | IN    |                      0.1 |
-| OH    |                      4.8 | KS    |                      0.1 |
-| MN    |                      4.5 | LA    |                      0.1 |
-| VA    |                      4.3 | MS    |                      0.1 |
+| FL    |                     18.2 | CT    |                      0.4 |
+| PA    |                     10.8 | NJ    |                      0.4 |
+| MI    |                      9.2 | DE    |                      0.3 |
+| TX    |                      8.9 | IL    |                      0.3 |
+| NC    |                      6.5 | WA    |                      0.3 |
+| AZ    |                      6.1 | AK    |                      0.2 |
+| WI    |                      5.8 | MO    |                      0.2 |
+| GA    |                      5.3 | SC    |                      0.2 |
+| MN    |                      5.0 | IN    |                      0.1 |
+| OH    |                      4.6 | KS    |                      0.1 |
+| VA    |                      4.6 | LA    |                      0.1 |
 | NV    |                      3.4 | MT    |                      0.1 |
-| NH    |                      2.0 | RI    |                      0.1 |
-| IA    |                      1.7 | UT    |                      0.1 |
-| ME    |                      1.7 | MD    |                      0.0 |
-| NM    |                      1.4 | NE    |                      0.0 |
-| CO    |                      1.1 | NY    |                      0.0 |
-| OR    |                      0.8 | TN    |                      0.0 |
-| DE    |                      0.4 | VT    |                      0.0 |
+| NH    |                      2.1 | RI    |                      0.1 |
+| ME    |                      1.7 | UT    |                      0.1 |
+| IA    |                      1.6 | KY    |                      0.0 |
+| NM    |                      1.4 | MS    |                      0.0 |
+| CO    |                      1.2 | NE    |                      0.0 |
+| OR    |                      0.7 | NY    |                      0.0 |
 
 ### Electoral college outcomes
 
@@ -224,7 +223,7 @@ majority:
 |                                                                           | Chance (%) |
 | ------------------------------------------------------------------------- | ---------: |
 | Democrats win the popular vote and electoral college                      |         86 |
-| Democrats win the popular vote, but Republicans win the electoral college |         10 |
+| Democrats win the popular vote, but Republicans win the electoral college |         11 |
 | Republicans win the popular vote and electoral college                    |          3 |
 | Republicans win the popular vote, but Democrats win the electoral college |          0 |
 
